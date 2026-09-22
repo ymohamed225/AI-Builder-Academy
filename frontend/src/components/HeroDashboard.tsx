@@ -23,7 +23,13 @@ import {
   PieChart,
   Globe,
   DollarSign,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Wifi,
+  Battery,
+  Bell,
+  Home,
+  ShoppingBag,
+  Settings
 } from "lucide-react";
 
 export function HeroDashboard() {
@@ -483,41 +489,203 @@ export function HeroDashboard() {
           {/* Right Smartphone Screen Mockup (4 Columns) */}
           <div className="lg:col-span-4 flex flex-col items-center justify-center relative pt-2 lg:pt-0">
             
-            {/* Phone Frame */}
-            <div className="w-full max-w-[230px] rounded-[36px] bg-slate-900 border-4 border-slate-800 p-3 shadow-2xl relative overflow-hidden group-hover:border-brand-cyan/40 transition-colors">
+            {/* Phone Frame Container */}
+            <div className="w-full max-w-[250px] rounded-[40px] bg-slate-900 border-4 border-slate-700/80 p-3 shadow-2xl shadow-brand-500/20 relative overflow-hidden group-hover:border-brand-cyan/50 transition-all duration-300">
               
-              {/* Speaker Notch */}
-              <div className="w-16 h-4 bg-slate-950 rounded-b-xl mx-auto mb-3 flex items-center justify-center">
+              {/* Speaker Notch & Camera Island */}
+              <div className="w-20 h-4 bg-slate-950 rounded-b-2xl mx-auto mb-2 flex items-center justify-between px-3">
+                <div className="w-2 h-2 rounded-full bg-slate-800" />
                 <div className="w-8 h-1 bg-slate-800 rounded-full" />
               </div>
 
-              {/* Screen Inner Content */}
-              <div className="bg-slate-950 rounded-[24px] p-4 text-center space-y-4 border border-slate-800/80 min-h-[260px] flex flex-col justify-between">
+              {/* Screen Inner Content Container */}
+              <div className="bg-slate-950 rounded-[28px] p-3 border border-slate-800/80 min-h-[360px] flex flex-col justify-between relative overflow-hidden">
                 
-                {/* App Brand Header */}
-                <div className="space-y-2 pt-2">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-cyan to-brand-500 mx-auto flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-brand-500/30">
-                    AI
+                {/* Top Mobile Status Bar */}
+                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 px-1 border-b border-slate-900 pb-2">
+                  <span className="font-bold text-white">09:41</span>
+                  <div className="flex items-center gap-1.5 text-slate-400">
+                    <span className="text-[9px] font-bold text-brand-cyan">5G</span>
+                    <Wifi className="w-3 h-3 text-slate-300" />
+                    <Battery className="w-3.5 h-3.5 text-emerald-400" />
                   </div>
-                  <span className="text-xs font-black text-white block">AI Builder App</span>
-                  <span className="text-[10px] text-slate-400 font-mono block">iOS & Android Ready</span>
                 </div>
 
                 {/* Dynamic Screen View Based on Active Tab */}
-                <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 text-left">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-slate-400">Statut App</span>
-                    <span className="text-emerald-400 font-bold">● En ligne</span>
-                  </div>
-                  <div className="w-full h-2 bg-brand-cyan/30 rounded-full overflow-hidden">
-                    <div className="w-3/4 h-full bg-gradient-to-r from-brand-cyan to-brand-500 rounded-full animate-pulse" />
-                  </div>
-                </div>
+                <AnimatePresence mode="wait">
+                  
+                  {/* SAAS MOBILE SCREEN */}
+                  {activeTab === "saas" && (
+                    <motion.div
+                      key="mobile-saas"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-3 py-1"
+                    >
+                      {/* App Top Bar */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-cyan to-brand-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-md shadow-brand-cyan/20">
+                            AI
+                          </div>
+                          <div className="text-left">
+                            <span className="text-xs font-black text-white block leading-tight">AI Builder App</span>
+                            <span className="text-[9px] text-emerald-400 font-bold block flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> En ligne
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 relative">
+                          <Bell className="w-3.5 h-3.5" />
+                          <span className="w-2 h-2 rounded-full bg-brand-cyan absolute top-1 right-1 animate-ping" />
+                        </div>
+                      </div>
 
-                {/* Bottom Verification Seal */}
-                <div className="pt-2 border-t border-slate-900 flex items-center justify-center gap-1.5 text-[10px] text-emerald-400 font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Responsive 100% Mobile</span>
+                      {/* Mobile Metric Card */}
+                      <div className="p-3 rounded-xl bg-slate-900/90 border border-brand-cyan/30 text-left space-y-1 relative overflow-hidden">
+                        <div className="flex items-center justify-between text-[10px] text-slate-400">
+                          <span>Ventes Directes</span>
+                          <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">+12.4%</span>
+                        </div>
+                        <span className="text-sm sm:text-base font-black text-white block tracking-tight">
+                          {salesCount.toLocaleString()} F
+                        </span>
+                        
+                        {/* Mini Sparkline Bar Chart Widget inside Phone */}
+                        <div className="flex items-end gap-1 h-6 pt-1">
+                          {[40, 65, 45, 80, 55, 90, 100].map((h, i) => (
+                            <div
+                              key={i}
+                              className="flex-1 bg-gradient-to-t from-brand-500 to-brand-cyan rounded-t"
+                              style={{ height: `${h}%` }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Live Mobile Notification Toast */}
+                      <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 text-left space-y-1">
+                        <div className="flex items-center justify-between text-[9px] font-bold text-emerald-300">
+                          <span className="flex items-center gap-1">
+                            <Bell className="w-3 h-3 text-emerald-400" /> Nouvelle Vente
+                          </span>
+                          <span className="text-slate-400">À l'instant</span>
+                        </div>
+                        <p className="text-[10px] text-white font-bold">
+                          +25 000 F via Mobile Money 🇨🇮
+                        </p>
+                      </div>
+
+                      {/* Quick Mobile Action Buttons */}
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <button className="py-1.5 px-2 rounded-lg bg-brand-500 text-white font-bold text-[9px] shadow-sm">
+                          + Client
+                        </button>
+                        <button className="py-1.5 px-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-bold text-[9px]">
+                          Rapport
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* VIBE CODING MOBILE SCREEN */}
+                  {activeTab === "vibe" && (
+                    <motion.div
+                      key="mobile-vibe"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-3 py-1 text-left"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-purple-400 flex items-center gap-1">
+                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> AI Copilot Mobile
+                        </span>
+                        <span className="text-[9px] font-mono text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded font-bold">
+                          Build OK
+                        </span>
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[10px] space-y-1.5 text-slate-300">
+                        <span className="text-purple-400 font-bold block">// React Native App</span>
+                        <p className="text-slate-400 text-[9px]">
+                          &lt;View style=&#123;styles.card&#125;&gt;<br />
+                          {"  "}&lt;Text&gt;Application Prête&lt;/Text&gt;<br />
+                          &lt;/View&gt;
+                        </p>
+                      </div>
+
+                      <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-bold flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        <span>Compilé pour iOS & Android</span>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* RESTAURANT MOBILE SCREEN */}
+                  {activeTab === "restaurant" && (
+                    <motion.div
+                      key="mobile-rest"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-2 py-1 text-left"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-white flex items-center gap-1">
+                          <Utensils className="w-3.5 h-3.5 text-emerald-400" /> Abidjan Food App
+                        </span>
+                        <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                          Menu Live
+                        </span>
+                      </div>
+
+                      <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                        <div className="flex items-center justify-between text-[10px]">
+                          <span className="font-bold text-white">Poulet Braisé XL</span>
+                          <span className="text-emerald-400 font-bold">4 500 F</span>
+                        </div>
+                        <span className="text-[9px] text-amber-400 bg-amber-500/10 px-1 rounded font-mono inline-block">
+                          🔥 En préparation (Table 4)
+                        </span>
+                      </div>
+
+                      <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                        <div className="flex items-center justify-between text-[10px]">
+                          <span className="font-bold text-white">Attiéké Poisson</span>
+                          <span className="text-emerald-400 font-bold">6 000 F</span>
+                        </div>
+                        <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-1 rounded font-mono inline-block">
+                          🟢 Livré • Cocody
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+
+                </AnimatePresence>
+
+                {/* Bottom Mobile Navigation Bar */}
+                <div className="pt-2 border-t border-slate-900 flex items-center justify-around text-slate-500">
+                  <div className="flex flex-col items-center gap-0.5 text-brand-cyan">
+                    <Home className="w-3.5 h-3.5" />
+                    <span className="text-[8px] font-bold">Accueil</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-0.5 text-slate-400">
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span className="text-[8px]">Stats</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-0.5 text-slate-400">
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <span className="text-[8px]">Ventes</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-0.5 text-slate-400">
+                    <Settings className="w-3.5 h-3.5" />
+                    <span className="text-[8px]">Réglages</span>
+                  </div>
                 </div>
 
               </div>
@@ -526,11 +694,11 @@ export function HeroDashboard() {
 
             {/* Floating Pill Badges around Smartphone */}
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <span className="text-[10px] font-extrabold text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/30 px-2.5 py-1 rounded-full shadow-sm">
-                ⚡ Vibe Coding
+              <span className="text-[10px] font-extrabold text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/30 px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
+                <Smartphone className="w-3 h-3 text-brand-cyan" /> iOS & Android Ready
               </span>
-              <span className="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-sm">
-                📱 Touch Optimized
+              <span className="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-400" /> Responsive 100% Mobile
               </span>
             </div>
 
