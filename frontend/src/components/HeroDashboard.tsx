@@ -17,14 +17,20 @@ import {
   CheckCircle2,
   Server,
   Layers,
-  Flame
+  Flame,
+  BarChart3,
+  ArrowUpRight,
+  PieChart,
+  Globe,
+  DollarSign,
+  Users as UsersIcon
 } from "lucide-react";
 
 export function HeroDashboard() {
   const [activeTab, setActiveTab] = useState<"saas" | "vibe" | "restaurant">("saas");
   const [typedPrompt, setTypedPrompt] = useState("");
-  const [salesCount, setSalesCount] = useState(3450000);
-  const [userCount, setUserCount] = useState(1250);
+  const [salesCount, setSalesCount] = useState(3464399);
+  const [userCount, setUserCount] = useState(1253);
 
   // Prompt typing effect for Vibe Coding tab
   const fullPrompt = "Crée un dashboard SaaS moderne pour gérer les ventes et abonnements avec base de données et API sécurisée...";
@@ -149,9 +155,9 @@ export function HeroDashboard() {
                   <div className="flex items-center justify-between bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                     <div className="flex items-center gap-2">
                       <div className="p-1.5 rounded-lg bg-brand-500/20 text-brand-cyan">
-                        <Activity className="w-4 h-4" />
+                        <BarChart3 className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-bold text-white">Tableau de bord SaaS - Produit Réel</span>
+                      <span className="text-xs font-bold text-white">Tableau de bord Business Intelligence - Produit Réel</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
@@ -166,74 +172,175 @@ export function HeroDashboard() {
                   {/* 3 Metric Cards */}
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-slate-800 relative overflow-hidden group hover:border-brand-cyan/40 transition-colors">
-                      <span className="text-[10px] sm:text-xs text-slate-400 block font-medium">Utilisateurs</span>
+                      <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-xs">
+                        <span>Utilisateurs</span>
+                        <UsersIcon className="w-3.5 h-3.5 text-brand-cyan" />
+                      </div>
                       <span className="text-base sm:text-2xl font-black text-white mt-1 block">
                         {userCount.toLocaleString()}
                       </span>
-                      <span className="text-[9px] text-emerald-400 font-mono mt-1 block flex items-center gap-0.5">
+                      <span className="text-[9px] text-emerald-400 font-mono mt-1 block flex items-center gap-0.5 font-bold">
                         <TrendingUp className="w-2.5 h-2.5 inline" /> +12% ce mois
                       </span>
                     </div>
 
-                    <div className="bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-brand-cyan/30 relative overflow-hidden group shadow-lg shadow-brand-500/10">
+                    <div className="bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-brand-cyan/40 relative overflow-hidden group shadow-lg shadow-brand-500/10">
                       <div className="absolute top-0 right-0 w-12 h-12 bg-brand-cyan/10 blur-xl pointer-events-none" />
-                      <span className="text-[10px] sm:text-xs text-slate-300 block font-medium">Ventes (FCFA)</span>
+                      <div className="flex items-center justify-between text-slate-300 text-[10px] sm:text-xs">
+                        <span>Ventes (FCFA)</span>
+                        <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+                      </div>
                       <span className="text-base sm:text-2xl font-black text-emerald-400 mt-1 block tracking-tight">
                         {salesCount.toLocaleString()} F
                       </span>
-                      <span className="text-[9px] text-brand-cyan font-mono mt-1 block flex items-center gap-0.5">
-                        <Flame className="w-2.5 h-2.5 inline text-amber-400" /> En direct
+                      <span className="text-[9px] text-brand-cyan font-mono mt-1 block flex items-center gap-0.5 font-bold">
+                        <Flame className="w-2.5 h-2.5 inline text-amber-400" /> En direct (PostgreSQL)
                       </span>
                     </div>
 
                     <div className="bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-slate-800 relative overflow-hidden group hover:border-purple-500/40 transition-colors">
-                      <span className="text-[10px] sm:text-xs text-slate-400 block font-medium">API Status</span>
+                      <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-xs">
+                        <span>API Status</span>
+                        <Server className="w-3.5 h-3.5 text-purple-400" />
+                      </div>
                       <span className="text-base sm:text-2xl font-black text-brand-cyan mt-1 block">
                         100% OK
                       </span>
-                      <span className="text-[9px] text-slate-400 font-mono mt-1 block">
-                        Uptime 99.9%
+                      <span className="text-[9px] text-slate-400 font-mono mt-1 block font-semibold">
+                        Uptime 99.9% • SSL
                       </span>
                     </div>
                   </div>
 
-                  {/* Animated Revenue Sparkline Chart */}
-                  <div className="bg-slate-900/70 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between text-xs text-slate-300">
-                      <span className="font-semibold flex items-center gap-1.5">
-                        <TrendingUp className="w-3.5 h-3.5 text-brand-cyan" />
-                        Croissance des revenus & requêtes API
-                      </span>
-                      <span className="text-[10px] font-mono text-slate-400">Temps réel</span>
+                  {/* Power BI Style Interactive Analytics Chart */}
+                  <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3 relative overflow-hidden">
+                    
+                    {/* BI Header & Legend */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1 rounded bg-brand-cyan/10 text-brand-cyan">
+                          <PieChart className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs font-bold text-white">Analyse BI — Revenue & Traffic Flow</span>
+                      </div>
+
+                      {/* Legend Items */}
+                      <div className="flex items-center gap-3 text-[10px] font-mono">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-sm bg-brand-cyan shadow-sm shadow-brand-cyan/50" />
+                          <span className="text-slate-300 font-semibold">Chiffre d'Affaires</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-sm bg-purple-400 shadow-sm shadow-purple-400/50" />
+                          <span className="text-slate-300 font-semibold">Requêtes API</span>
+                        </div>
+                        <div className="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-400 font-bold">
+                          <span className="text-brand-cyan">2026</span>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* SVG Sparkline Graph */}
-                    <div className="h-24 w-full relative pt-2">
-                      <svg className="w-full h-full overflow-visible" viewBox="0 0 300 60" preserveAspectRatio="none">
+                    {/* SVG BI Multi-Series Chart */}
+                    <div className="h-32 w-full relative pt-1">
+                      
+                      {/* Y-Axis Grid Lines & Values */}
+                      <div className="absolute inset-0 flex flex-col justify-between text-[9px] font-mono text-slate-500 pointer-events-none pb-5">
+                        <div className="border-b border-slate-800/60 w-full flex justify-between">
+                          <span>3.5M FCFA</span>
+                          <span className="text-[8px] text-emerald-400 bg-emerald-500/10 px-1.5 rounded font-extrabold border border-emerald-500/20">
+                            ★ MAX 3.46M F
+                          </span>
+                        </div>
+                        <div className="border-b border-slate-800/40 w-full"><span>2.5M FCFA</span></div>
+                        <div className="border-b border-slate-800/40 w-full"><span>1.5M FCFA</span></div>
+                        <div className="border-b border-slate-800/40 w-full"><span>0.5M FCFA</span></div>
+                        <div className="border-b border-slate-800/80 w-full"><span>0 FCFA</span></div>
+                      </div>
+
+                      {/* SVG Elements */}
+                      <svg className="w-full h-full overflow-visible relative z-10" viewBox="0 0 400 80" preserveAspectRatio="none">
                         <defs>
-                          <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#00F0FF" stopOpacity="0.4" />
+                          <linearGradient id="biRevenueGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#00F0FF" stopOpacity="0.45" />
+                            <stop offset="80%" stopColor="#0066FF" stopOpacity="0.05" />
                             <stop offset="100%" stopColor="#0066FF" stopOpacity="0.0" />
                           </linearGradient>
+
+                          <linearGradient id="biBarGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.7" />
+                            <stop offset="100%" stopColor="#0284C7" stopOpacity="0.15" />
+                          </linearGradient>
                         </defs>
-                        {/* Area fill */}
+
+                        {/* BI Histogram Columns / Bars */}
+                        <rect x="25" y="45" width="14" height="35" rx="2" fill="url(#biBarGrad)" opacity="0.5" />
+                        <rect x="80" y="35" width="14" height="45" rx="2" fill="url(#biBarGrad)" opacity="0.6" />
+                        <rect x="135" y="50" width="14" height="30" rx="2" fill="url(#biBarGrad)" opacity="0.5" />
+                        <rect x="190" y="28" width="14" height="52" rx="2" fill="url(#biBarGrad)" opacity="0.7" />
+                        <rect x="245" y="20" width="14" height="60" rx="2" fill="url(#biBarGrad)" opacity="0.8" />
+                        <rect x="300" y="15" width="14" height="65" rx="2" fill="url(#biBarGrad)" opacity="0.85" />
+                        <rect x="355" y="8" width="14" height="72" rx="2" fill="url(#biBarGrad)" opacity="0.9" />
+
+                        {/* Area Fill for Revenue Curve */}
                         <path
-                          d="M 0 50 Q 50 20 100 35 T 200 15 T 300 5 L 300 60 L 0 60 Z"
-                          fill="url(#chartGradient)"
+                          d="M 10 65 Q 65 42 120 52 T 225 25 T 325 15 T 395 6 L 395 80 L 10 80 Z"
+                          fill="url(#biRevenueGrad)"
                         />
-                        {/* Smooth Line */}
+
+                        {/* Primary Line: Revenue Curve (Cyan Glowing) */}
                         <path
-                          d="M 0 50 Q 50 20 100 35 T 200 15 T 300 5"
+                          d="M 10 65 Q 65 42 120 52 T 225 25 T 325 15 T 395 6"
                           fill="none"
                           stroke="#00F0FF"
                           strokeWidth="3"
                           strokeLinecap="round"
                         />
-                        {/* Animated Glowing Dot */}
-                        <circle cx="300" cy="5" r="4" fill="#00F0FF" className="animate-ping" />
-                        <circle cx="300" cy="5" r="4" fill="#FFFFFF" />
+
+                        {/* Secondary Line: API Request Volume (Purple Dashed) */}
+                        <path
+                          d="M 10 72 Q 65 58 120 62 T 225 38 T 325 25 T 395 12"
+                          fill="none"
+                          stroke="#C084FC"
+                          strokeWidth="2"
+                          strokeDasharray="4 4"
+                          strokeLinecap="round"
+                        />
+
+                        {/* Data Points */}
+                        <circle cx="120" cy="52" r="3" fill="#00F0FF" />
+                        <circle cx="225" cy="25" r="3" fill="#00F0FF" />
+                        <circle cx="325" cy="15" r="3" fill="#00F0FF" />
+
+                        {/* Active Live Pulse Pointer */}
+                        <circle cx="395" cy="6" r="5" fill="#00F0FF" className="animate-ping opacity-80" />
+                        <circle cx="395" cy="6" r="4" fill="#FFFFFF" stroke="#00F0FF" strokeWidth="2" />
                       </svg>
+
+                      {/* X-Axis Month Labels */}
+                      <div className="flex justify-between text-[9px] font-mono text-slate-400 pt-1 px-1 border-t border-slate-800/80">
+                        <span>Jan</span>
+                        <span>Fév</span>
+                        <span>Mar</span>
+                        <span>Avr</span>
+                        <span>Mai</span>
+                        <span>Juin</span>
+                        <span className="text-brand-cyan font-bold">Juil (Direct)</span>
+                      </div>
+
                     </div>
+
+                    {/* BI Stats Summary Footer */}
+                    <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/90 border border-slate-800 text-[10px] font-mono">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-slate-300">Croissance BI : <strong className="text-emerald-400 font-bold">+34.8% ce trimestre</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 text-slate-400">
+                        <span>Moy. jour: <strong className="text-white">115 400 F</strong></span>
+                        <span>Transactions: <strong className="text-brand-cyan font-bold">1 482</strong></span>
+                      </div>
+                    </div>
+
                   </div>
 
                   {/* Live Database & Security Status */}
