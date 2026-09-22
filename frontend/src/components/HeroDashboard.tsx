@@ -31,6 +31,24 @@ export function HeroDashboard() {
   const [typedPrompt, setTypedPrompt] = useState("");
   const [salesCount, setSalesCount] = useState(3464399);
   const [userCount, setUserCount] = useState(1253);
+  const [tick, setTick] = useState(0);
+
+  // Smooth continuous animation timer (25 FPS)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTick((prev) => (prev + 1) % 360);
+    }, 40);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Wave calculations for live graph movement
+  const wave1 = Math.sin((tick * Math.PI) / 30) * 2.5;
+  const wave2 = Math.cos((tick * Math.PI) / 25) * 3.5;
+  const wave3 = Math.sin((tick * Math.PI) / 20) * 2;
+
+  const revenueLineD = `M 10 ${65 + wave1} Q 65 ${42 + wave2} 120 ${52 + wave3} T 225 ${25 + wave1} T 325 ${15 + wave2} T 395 ${6 + wave3}`;
+  const revenueAreaD = `${revenueLineD} L 395 80 L 10 80 Z`;
+  const apiLineD = `M 10 ${72 - wave2} Q 65 ${58 - wave1} 120 ${62 - wave3} T 225 ${38 - wave2} T 325 ${25 - wave1} T 395 ${12 - wave3}`;
 
   // Prompt typing effect for Vibe Coding tab
   const fullPrompt = "Crée un dashboard SaaS moderne pour gérer les ventes et abonnements avec base de données et API sécurisée...";
@@ -272,48 +290,49 @@ export function HeroDashboard() {
                           </linearGradient>
                         </defs>
 
-                        {/* BI Histogram Columns / Bars */}
-                        <rect x="25" y="45" width="14" height="35" rx="2" fill="url(#biBarGrad)" opacity="0.5" />
-                        <rect x="80" y="35" width="14" height="45" rx="2" fill="url(#biBarGrad)" opacity="0.6" />
-                        <rect x="135" y="50" width="14" height="30" rx="2" fill="url(#biBarGrad)" opacity="0.5" />
-                        <rect x="190" y="28" width="14" height="52" rx="2" fill="url(#biBarGrad)" opacity="0.7" />
-                        <rect x="245" y="20" width="14" height="60" rx="2" fill="url(#biBarGrad)" opacity="0.8" />
-                        <rect x="300" y="15" width="14" height="65" rx="2" fill="url(#biBarGrad)" opacity="0.85" />
-                        <rect x="355" y="8" width="14" height="72" rx="2" fill="url(#biBarGrad)" opacity="0.9" />
+                        {/* BI Histogram Columns / Bars (Animated Heights) */}
+                        <rect x="25" y={45 + wave1} width="14" height={35 - wave1} rx="2" fill="url(#biBarGrad)" opacity="0.5" />
+                        <rect x="80" y={35 + wave2} width="14" height={45 - wave2} rx="2" fill="url(#biBarGrad)" opacity="0.6" />
+                        <rect x="135" y={50 + wave3} width="14" height={30 - wave3} rx="2" fill="url(#biBarGrad)" opacity="0.5" />
+                        <rect x="190" y={28 + wave1} width="14" height={52 - wave1} rx="2" fill="url(#biBarGrad)" opacity="0.7" />
+                        <rect x="245" y={20 + wave2} width="14" height={60 - wave2} rx="2" fill="url(#biBarGrad)" opacity="0.8" />
+                        <rect x="300" y={15 + wave3} width="14" height={65 - wave3} rx="2" fill="url(#biBarGrad)" opacity="0.85" />
+                        <rect x="355" y={8 + wave1} width="14" height={72 - wave1} rx="2" fill="url(#biBarGrad)" opacity="0.9" />
 
-                        {/* Area Fill for Revenue Curve */}
+                        {/* Area Fill for Revenue Curve (Live Animated Wave) */}
                         <path
-                          d="M 10 65 Q 65 42 120 52 T 225 25 T 325 15 T 395 6 L 395 80 L 10 80 Z"
+                          d={revenueAreaD}
                           fill="url(#biRevenueGrad)"
                         />
 
-                        {/* Primary Line: Revenue Curve (Cyan Glowing) */}
+                        {/* Primary Line: Revenue Curve (Cyan Glowing - Moving) */}
                         <path
-                          d="M 10 65 Q 65 42 120 52 T 225 25 T 325 15 T 395 6"
+                          d={revenueLineD}
                           fill="none"
                           stroke="#00F0FF"
                           strokeWidth="3"
                           strokeLinecap="round"
                         />
 
-                        {/* Secondary Line: API Request Volume (Purple Dashed) */}
+                        {/* Secondary Line: API Request Volume (Purple Flowing Stream) */}
                         <path
-                          d="M 10 72 Q 65 58 120 62 T 225 38 T 325 25 T 395 12"
+                          d={apiLineD}
                           fill="none"
                           stroke="#C084FC"
                           strokeWidth="2"
-                          strokeDasharray="4 4"
+                          strokeDasharray="6 6"
+                          strokeDashoffset={-tick * 2}
                           strokeLinecap="round"
                         />
 
-                        {/* Data Points */}
-                        <circle cx="120" cy="52" r="3" fill="#00F0FF" />
-                        <circle cx="225" cy="25" r="3" fill="#00F0FF" />
-                        <circle cx="325" cy="15" r="3" fill="#00F0FF" />
+                        {/* Animated Data Points */}
+                        <circle cx="120" cy={52 + wave3} r="3" fill="#00F0FF" />
+                        <circle cx="225" cy={25 + wave1} r="3" fill="#00F0FF" />
+                        <circle cx="325" cy={15 + wave2} r="3" fill="#00F0FF" />
 
                         {/* Active Live Pulse Pointer */}
-                        <circle cx="395" cy="6" r="5" fill="#00F0FF" className="animate-ping opacity-80" />
-                        <circle cx="395" cy="6" r="4" fill="#FFFFFF" stroke="#00F0FF" strokeWidth="2" />
+                        <circle cx="395" cy={6 + wave3} r="5" fill="#00F0FF" className="animate-ping opacity-80" />
+                        <circle cx="395" cy={6 + wave3} r="4" fill="#FFFFFF" stroke="#00F0FF" strokeWidth="2" />
                       </svg>
 
                       {/* X-Axis Month Labels */}
