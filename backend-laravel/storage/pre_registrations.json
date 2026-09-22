@@ -1,0 +1,41 @@
+[
+    {
+        "id": 1,
+        "registration_reference": "AI-CI-2026-78720",
+        "status": "NEW",
+        "admin_notes": "",
+        "created_at": "2026-09-22T18:49:28+02:00",
+        "updated_at": "2026-09-22T18:49:28+02:00",
+        "first_name": "tt",
+        "last_name": "tt",
+        "email": "tt",
+        "phone": "tt",
+        "profession": "tt",
+        "status_category": "Entrepreneur",
+        "computer_level": "d\u00e9butant",
+        "internet_level": "interm\u00e9diaire",
+        "excel_level": "d\u00e9butant",
+        "ai_level": "d\u00e9butant",
+        "programming_level": "d\u00e9butant",
+        "database_level": "d\u00e9butant",
+        "github_level": "d\u00e9butant",
+        "nocode_level": "d\u00e9butant",
+        "ai_usage_frequency": "Occasionnellement",
+        "ai_tools": [
+            "ChatGPT"
+        ],
+        "ai_primary_use": "Recherche",
+        "has_project_idea": "Non",
+        "project_description": "",
+        "problem_description": "",
+        "target_users": "",
+        "project_objective": "Business",
+        "application_types": [
+            "Application Web"
+        ],
+        "desired_training": "BOOTCAMP",
+        "weekly_availability": "4 \u00e0 6 heures",
+        "expected_result": "",
+        "website_hp": ""
+    }
+]
