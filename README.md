@@ -81,3 +81,4 @@ Toutes les variables sont centralisées et modifiables dans `frontend/src/config
 - `click_masterclass`
 - `click_bootcamp`
 - `click_premium`
+"# AI-Builder-Academy" 
