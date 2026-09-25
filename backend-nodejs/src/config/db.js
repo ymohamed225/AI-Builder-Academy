@@ -7,30 +7,45 @@ let activeDriver = 'pgsql';
 
 async function initDatabase() {
   const connection = process.env.DB_CONNECTION || 'pgsql';
-  const host = process.env.DB_HOST || '127.0.0.1';
-  const port = process.env.DB_PORT || (connection === 'pgsql' ? 5432 : 3306);
-  const database = process.env.DB_DATABASE || 'ai_builder_academy';
-  const user = process.env.DB_USERNAME || 'postgres';
-  const password = process.env.DB_PASSWORD || '';
+  const databaseUrl = process.env.DATABASE_URL;
 
-  if (connection === 'pgsql' || connection === 'postgres') {
+  if (connection === 'pgsql' || connection === 'postgres' || databaseUrl) {
     try {
-      const pool = new Pool({
-        host,
-        port: parseInt(port, 10),
-        database,
-        user,
-        password,
-        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-        max: 20,
-        idleTimeoutMillis: 30000
-      });
-      
-      // Test query
+      const isProduction = process.env.NODE_ENV === 'production' || process.env.DB_SSL === 'true';
+      const sslConfig = isProduction ? { rejectUnauthorized: false } : false;
+
+      let poolConfig = {};
+      if (databaseUrl) {
+        poolConfig = {
+          connectionString: databaseUrl,
+          ssl: sslConfig,
+          max: 20,
+          idleTimeoutMillis: 30000
+        };
+      } else {
+        const host = process.env.DB_HOST || '127.0.0.1';
+        const port = parseInt(process.env.DB_PORT || 5432, 10);
+        const database = process.env.DB_DATABASE || 'ai_builder_academy';
+        const user = process.env.DB_USERNAME || 'postgres';
+        const password = process.env.DB_PASSWORD || '';
+
+        poolConfig = {
+          host,
+          port,
+          database,
+          user,
+          password,
+          ssl: sslConfig,
+          max: 20,
+          idleTimeoutMillis: 30000
+        };
+      }
+
+      const pool = new Pool(poolConfig);
       await pool.query('SELECT 1');
       activeDriver = 'pgsql';
       dbClient = pool;
-      console.log(`[DB] Connected to PostgreSQL (${host}:${port}/${database})`);
+      console.log(`[DB] Connected successfully to PostgreSQL (${databaseUrl ? 'DATABASE_URL' : process.env.DB_HOST})`);
       return;
     } catch (err) {
       console.warn(`[DB Warning] PostgreSQL connection failed: ${err.message}. Trying fallback MySQL...`);
@@ -40,21 +55,20 @@ async function initDatabase() {
   // Fallback / Requested MySQL
   try {
     const mysqlPool = mysql.createPool({
-      host: '127.0.0.1',
-      port: 3306,
-      user: 'root',
-      password: '',
-      database: 'ai_builder_academy',
+      host: process.env.DB_HOST || '127.0.0.1',
+      port: parseInt(process.env.DB_PORT || 3306, 10),
+      user: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_DATABASE || 'ai_builder_academy',
       waitForConnections: true,
       connectionLimit: 10
     });
     await mysqlPool.query('SELECT 1');
     activeDriver = 'mysql';
     dbClient = mysqlPool;
-    console.log('[DB] Connected to MySQL (127.0.0.1:3306/ai_builder_academy)');
+    console.log('[DB] Connected to MySQL');
   } catch (err) {
     console.error(`[DB Error] All database connections failed: ${err.message}`);
-    // Return dummy client to prevent crash
     activeDriver = 'none';
   }
 }
@@ -66,7 +80,6 @@ async function executeQuery(sql, params = []) {
   }
 
   if (activeDriver === 'pgsql') {
-    // If query uses MySQL ? placeholders, convert to $1, $2...
     let pgSql = sql;
     let paramIndex = 1;
     pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
@@ -74,7 +87,6 @@ async function executeQuery(sql, params = []) {
     const res = await dbClient.query(pgSql, params);
     return res.rows;
   } else if (activeDriver === 'mysql') {
-    // If query uses $1, $2, convert to ?
     let mysqlSql = sql.replace(/\$\d+/g, '?');
     const [rows] = await dbClient.query(mysqlSql, params);
     return rows;
