@@ -1,84 +1,47 @@
-# 🚀 AI BUILDER ACADEMY CI - Landing Page & Backend API
+# 🚀 AI Builder Academy CI
 
-> « *De l’idée à l’application en production avec l’IA.* » 🇨🇮
+Plateforme web d'apprentissage et de pré-inscription pour **AI Builder Academy CI** — La première académie pratique de création d'applications avec l'IA en Côte d'Ivoire.
 
-Plateforme web de conversion marketing, landing page responsive premium et API Backend Laravel pour la formation **AI BUILDER ACADEMY CI**.
+## 🛠️ Stack Technique
 
----
+- **Frontend** : Next.js 14 (App Router), React, Tailwind CSS, Lucide Icons, Framer Motion.
+- **Backend API** : Node.js, Express.js, Multer (gestion des pièces jointes).
+- **Base de données** : PostgreSQL (Supabase / Render / Aiven) ou MySQL local (XAMPP).
 
-## 🏗️ Architecture du Projet
+## 📁 Structure du Projet
 
-```text
+```
 IA_Academy/
-├── frontend/                  # App Next.js 14+ / TypeScript / Tailwind CSS / Framer Motion
-│   ├── src/app/               # App Router (page.tsx, layout.tsx, globals.css)
-│   ├── src/components/        # 14 Composants SaaS UI Glassmorphism (avec HeroDashboard 3D/animé)
-│   ├── src/config/site.ts     # Configuration centralisée (WhatsApp, Curriculums, Tarifs)
-│   └── src/lib/               # Utilitaires WhatsApp & Tracking Analytics
-│
-└── backend-laravel/           # Moteur API PHP Laravel 11
-    ├── app/Http/Controllers/  # LeadController
-    ├── app/Models/            # Lead & Registration
-    ├── database/migrations/   # Tables SQL (leads, registrations)
-    └── routes/api.php         # Endpoints REST API (/api/leads/track, /api/health)
+├── frontend/             # Application Next.js 14 (Port 3000)
+├── backend-nodejs/       # API REST Node.js & Express (Port 8000)
+│   ├── src/
+│   │   ├── config/       # Connexion BDD PostgreSQL / MySQL
+│   │   ├── controllers/  # Logique métier (Candidats, Sondages, Campagnes, Leads)
+│   │   ├── routes/       # Routes API REST Express
+│   │   └── server.js     # Serveur HTTP Express
+│   └── database/         # Schemas SQL (init_pgsql.sql, init_mysql.sql)
+└── GUIDE_DEPLOIEMENT.md  # Guide pas à pas (Vercel, Render, Supabase)
 ```
 
----
+## 🚀 Démarrage Rapide
 
-## 🎯 Conversion Funnel & WhatsApp Integration
+### 1. Démarrer le Backend Node.js
 
-```text
-AFFICHE / QR CODE
-   ↓
-LANDING PAGE (http://localhost:3000)
-   ↓
-CLIC CTA WHATSAPP (Message prérempli spécifique par offre)
-   ↓
-ÉCHANGE WHATSAPP & ORIENTATION
-   ↓
-VALIDATION & INSCRIPTION
-   ↓
-ONBOARDING & ACCÈS FORMATION
+```bash
+cd backend-nodejs
+npm install
+npm start
 ```
+> Le serveur API écoute sur `http://localhost:8000/api`
 
----
+### 2. Démarrer le Frontend Next.js
 
-## ⚡ Démarrage Rapide
-
-### 1. Frontend Next.js
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-La landing page est accessible sur `http://localhost:3000`.
+> L'application frontend s'ouvre sur `http://localhost:3000`
 
-### 2. Backend Laravel
-```bash
-cd backend-laravel
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan serve
-```
-L'API REST fonctionnera sur `http://localhost:8000/api`.
-
----
-
-## ⚙️ Personnalisation des Liens & Numéros
-
-Toutes les variables sont centralisées et modifiables dans `frontend/src/config/site.ts` ou via les variables d'environnement `.env.local` :
-
-- **Numéro WhatsApp** : `NEXT_PUBLIC_WHATSAPP_NUMBER="2250700000000"`
-
----
-
-## 📊 Évènements Analytics Préparés
-
-- `page_view`
-- `click_whatsapp`
-- `click_program`
-- `click_masterclass`
-- `click_bootcamp`
-- `click_premium`
-"# AI-Builder-Academy" 
+## 📖 Déploiement Cloud
+Pour héberger le projet gratuitement sur Vercel, Render et Supabase, suivez le guide : [GUIDE_DEPLOIEMENT.md](GUIDE_DEPLOIEMENT.md).
