@@ -86,9 +86,20 @@ git push -u origin main
 
 ## 4️⃣ Étape 4 : Héberger le Frontend Next.js sur Vercel
 
-1. Sur **[Vercel](https://vercel.com)**, importez le dépôt GitHub.
-2. **Root Directory** : `frontend`.
-3. **Environment Variable** :
-   - **Clé** : `NEXT_PUBLIC_API_BASE_URL`
-   - **Valeur** : `https://ia-academy-api.onrender.com/api`
-4. Cliquez sur **Deploy**.
+1. Connectez-vous sur **[Vercel.com](https://vercel.com)** avec votre compte GitHub.
+2. Cliquez sur le bouton **"Add New..."** > **"Project"**.
+3. Importez le dépôt GitHub `ymohamed225/AI-Builder-Academy`.
+4. Dans la configuration du projet (**Configure Project**) :
+   - **Framework Preset** : `Next.js` (détecté automatiquement).
+   - **Root Directory** : Cliquez sur *Edit* et sélectionnez le dossier `frontend`.
+   - **Build and Output Settings** : Conservez les valeurs par défaut (`npm run build`).
+5. Dans la section **Environment Variables**, ajoutez les variables d'environnement suivantes :
+
+| Nom de la variable | Valeur de production | Description |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_URL` | `https://ia-academy-api.onrender.com/api` | URL de votre backend Express sur Render |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | `2250700000000` | Numéro WhatsApp officiel pour les inscriptions |
+
+6. Cliquez sur **Deploy**. Vercel va compiler l'application Next.js et vous fournir un lien de production (ex: `https://ai-builder-academy-ci.vercel.app`).
+7. Rendez-vous sur votre dashboard **Render.com** (Backend) et assurez-vous de mettre à jour la variable `CORS_ORIGIN` avec l'URL Vercel générée (`https://ai-builder-academy-ci.vercel.app`) afin d'autoriser les requêtes cross-origin.
+
