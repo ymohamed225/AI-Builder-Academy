@@ -58,10 +58,10 @@ export function Footer() {
               href={getWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors bg-emerald-500/10 px-3 py-2 rounded-xl border border-emerald-500/20"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Contacter l'équipe pédagogique</span>
+              <span>Contacter sur WhatsApp ({SITE_CONFIG.whatsappFormattedNumber})</span>
             </a>
           </div>
 
