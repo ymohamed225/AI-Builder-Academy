@@ -69,7 +69,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} {SITE_CONFIG.name}. Tous droits réservés. Abidjan, Côte d'Ivoire 🇨🇮</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} {SITE_CONFIG.name}. Tous droits réservés. Abidjan, Côte d'Ivoire 🇨🇮</p>
           <div className="flex items-center gap-1">
             <span>Conçu avec passion pour l'innovation en Afrique</span>
           </div>
