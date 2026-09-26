@@ -2,37 +2,49 @@
 
 import { useState, useEffect } from "react";
 import { ShieldCheck, Eye, EyeOff, Lock, User, AlertCircle } from "lucide-react";
+import { SITE_CONFIG } from "@/config/site";
 
-const ADMIN_PASSWORD = "admin2026!";
-const ADMIN_USER = "admin";
-const SESSION_KEY = "aibuilder_admin_auth";
+const SESSION_TOKEN_KEY = "aibuilder_admin_token";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+
+// ─── Hook d'authentification ────────────────────────────────────────────────
 
 export function useAdminAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+  // Vérifie le token stocké au chargement de la page
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = sessionStorage.getItem(SESSION_KEY);
-      setIsAuthenticated(stored === "true");
+    const token = typeof window !== "undefined"
+      ? sessionStorage.getItem(SESSION_TOKEN_KEY)
+      : null;
+
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
     }
+
+    // Vérifie la validité du token auprès du backend
+    fetch(`${API_URL}/auth/verify-token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    })
+      .then((res) => res.json())
+      .then((data) => setIsAuthenticated(data.valid === true))
+      .catch(() => setIsAuthenticated(false));
   }, []);
 
-  const login = (username: string, password: string): boolean => {
-    if (username === ADMIN_USER && password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "true");
-      setIsAuthenticated(true);
-      return true;
-    }
-    return false;
-  };
-
   const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    }
     setIsAuthenticated(false);
   };
 
-  return { isAuthenticated, login, logout };
+  return { isAuthenticated, logout };
 }
+
+// ─── Page de connexion ────────────────────────────────────────────────────────
 
 interface AdminLoginPageProps {
   onLoginSuccess: () => void;
@@ -44,22 +56,33 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAdminAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    await new Promise((r) => setTimeout(r, 600)); // Simulate async
+    try {
+      const res = await fetch(`${API_URL}/auth/admin-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    const success = login(username, password);
-    if (success) {
-      onLoginSuccess();
-    } else {
-      setError("Identifiants incorrects. Veuillez réessayer.");
+      const data = await res.json();
+
+      if (res.ok && data.success && data.token) {
+        // Stocker le token (pas le mot de passe !)
+        sessionStorage.setItem(SESSION_TOKEN_KEY, data.token);
+        onLoginSuccess();
+      } else {
+        setError(data.message || "Identifiants incorrects. Veuillez réessayer.");
+      }
+    } catch {
+      setError("Impossible de contacter le serveur. Vérifiez votre connexion.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -77,7 +100,7 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            AI Builder Academy CI
+            {SITE_CONFIG.name}
           </h1>
           <p className="text-sm text-slate-400 mt-1">
             Espace Administration Sécurisé
@@ -93,7 +116,7 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
             </span>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
             {/* Username */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -105,8 +128,9 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin"
+                  placeholder="Votre identifiant"
                   required
+                  autoComplete="off"
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30 transition-all"
                 />
               </div>
@@ -125,6 +149,7 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••"
                   required
+                  autoComplete="new-password"
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-12 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30 transition-all"
                 />
                 <button
@@ -167,7 +192,7 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
           </form>
 
           <p className="text-center text-xs text-slate-600 mt-6">
-            Accès réservé à l&apos;équipe AI Builder Academy CI
+            Accès réservé à l&apos;équipe {SITE_CONFIG.name}
           </p>
         </div>
       </div>

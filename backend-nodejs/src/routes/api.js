@@ -56,4 +56,9 @@ router.post('/admin/campaigns/upload-attachment', upload.single('file'), campaig
 // 6. Webhooks
 router.post('/webhooks/chariow', webhookController.handleChariowWebhook);
 
+// 7. Admin Authentication (credentials stockés dans les variables d'environnement)
+const authController = require('../controllers/authController');
+router.post('/auth/admin-login', authController.adminLogin);
+router.post('/auth/verify-token', authController.verifyToken);
+
 module.exports = router;
