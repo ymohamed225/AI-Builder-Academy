@@ -33,24 +33,30 @@ import {
 } from "lucide-react";
 
 export function HeroDashboard() {
+  const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<"saas" | "vibe" | "restaurant">("saas");
   const [typedPrompt, setTypedPrompt] = useState("");
   const [salesCount, setSalesCount] = useState(3464399);
   const [userCount, setUserCount] = useState(1253);
   const [tick, setTick] = useState(0);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Smooth continuous animation timer (25 FPS)
   useEffect(() => {
+    if (!mounted) return;
     const timer = setInterval(() => {
       setTick((prev) => (prev + 1) % 360);
     }, 40);
     return () => clearInterval(timer);
-  }, []);
+  }, [mounted]);
 
-  // Wave calculations for live graph movement
-  const wave1 = Math.sin((tick * Math.PI) / 30) * 2.5;
-  const wave2 = Math.cos((tick * Math.PI) / 25) * 3.5;
-  const wave3 = Math.sin((tick * Math.PI) / 20) * 2;
+  // Wave calculations for live graph movement (0 during SSR to prevent hydration mismatch)
+  const wave1 = mounted ? Math.sin((tick * Math.PI) / 30) * 2.5 : 0;
+  const wave2 = mounted ? Math.cos((tick * Math.PI) / 25) * 3.5 : 0;
+  const wave3 = mounted ? Math.sin((tick * Math.PI) / 20) * 2 : 0;
 
   const revenueLineD = `M 10 ${65 + wave1} Q 65 ${42 + wave2} 120 ${52 + wave3} T 225 ${25 + wave1} T 325 ${15 + wave2} T 395 ${6 + wave3}`;
   const revenueAreaD = `${revenueLineD} L 395 80 L 10 80 Z`;

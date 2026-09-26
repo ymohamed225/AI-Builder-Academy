@@ -53,7 +53,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="fr" className="scroll-smooth">
+    <html lang="fr" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <script
@@ -61,7 +61,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased selection:bg-brand-cyan selection:text-brand-darker">
+      <body className="antialiased selection:bg-brand-cyan selection:text-brand-darker" suppressHydrationWarning>
         {children}
       </body>
     </html>
