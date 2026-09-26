@@ -99,7 +99,7 @@ async function sendCampaign(req, res) {
 
     await db.insert(sqlCamp, [
       input.title || 'Sans titre',
-      input.channel || 'WHATSAPP',
+      input.channel || 'EMAIL',
       recipientType,
       input.subject || '',
       input.body_template || '',
@@ -110,11 +110,41 @@ async function sendCampaign(req, res) {
       processedRecipients.length
     ]);
 
+    // Envoi automatique d'emails si le canal inclut EMAIL et que SMTP est configuré
+    const emailService = require('../services/emailService');
+    let emailSendResults = [];
+    let smtpStatusMessage = '';
+
+    if ((input.channel === 'EMAIL' || input.channel === 'BOTH') && !isScheduled) {
+      if (emailService.isSmtpConfigured()) {
+        for (const recipient of processedRecipients) {
+          if (recipient.email && recipient.email.includes('@')) {
+            const sendRes = await emailService.sendEmail({
+              to: recipient.email,
+              subject: input.subject || input.title || 'Notification AI Builder Academy CI',
+              text: recipient.personalized_body,
+              attachments: input.attachment_url ? [{
+                filename: input.attachment_name || 'Document_Joint.pdf',
+                path: input.attachment_url
+              }] : []
+            });
+            emailSendResults.push({ email: recipient.email, ...sendRes });
+          }
+        }
+        const successCount = emailSendResults.filter(r => r.sent).length;
+        smtpStatusMessage = ` ✉️ ${successCount}/${emailSendResults.length} email(s) envoyé(s) directement avec succès.`;
+      } else {
+        smtpStatusMessage = ' ℹ️ Envoi direct prêt (ajoutez vos identifiants SMTP_HOST/SMTP_USER dans le .env pour l\'envoi 100% automatique).';
+      }
+    }
+
     return res.status(201).json({
       success: true,
-      message: `Campagne enregistrée dans la base (${db.getActiveDriver().toUpperCase()}). ${processedRecipients.length} destinataire(s) cibles.`,
-      recipients: processedRecipients
+      message: `Campagne enregistrée.${smtpStatusMessage}`,
+      recipients: processedRecipients,
+      email_results: emailSendResults
     });
+
   } catch (err) {
     console.error('[Send Campaign Error]', err);
     return res.status(500).json({ success: false, message: err.message });
