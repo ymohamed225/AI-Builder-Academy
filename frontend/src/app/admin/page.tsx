@@ -9,11 +9,16 @@ import { CandidateDetailModal } from "@/components/admin/CandidateDetailModal";
 import { MessagingCenter } from "@/components/admin/MessagingCenter";
 import { SurveyBuilder } from "@/components/admin/SurveyBuilder";
 import { SurveyAnalytics } from "@/components/admin/SurveyAnalytics";
+import { AdminLoginPage, useAdminAuth } from "@/components/admin/AdminLogin";
 import { PreRegistrationRecord, StatsData } from "@/types/pre-registration";
 import { fetchPreRegistrations, fetchStats } from "@/lib/api";
-import { ShieldCheck, RefreshCw, Users, Send, FileText } from "lucide-react";
+import { ShieldCheck, RefreshCw, Users, Send, FileText, LogOut } from "lucide-react";
 
 export default function AdminDashboardPage() {
+  const { isAuthenticated, logout } = useAdminAuth();
+  const [authReady, setAuthReady] = useState(false);
+  const [manualAuth, setManualAuth] = useState(false);
+
   const [activeTab, setActiveTab] = useState<"CANDIDATES" | "MESSAGING" | "SURVEYS">("CANDIDATES");
   const [selectedSurveyId, setSelectedSurveyId] = useState<number | null>(null);
 
@@ -22,6 +27,13 @@ export default function AdminDashboardPage() {
   const [selectedCandidate, setSelectedCandidate] = useState<PreRegistrationRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState({ search: "", status: "", training: "" });
+
+  // Wait for client-side auth check to complete
+  useEffect(() => {
+    if (isAuthenticated !== null) {
+      setAuthReady(true);
+    }
+  }, [isAuthenticated]);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -36,8 +48,22 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    loadData();
-  }, [filters]);
+    if (isAuthenticated) loadData();
+  }, [filters, isAuthenticated]);
+
+  // Show nothing while checking auth (prevents hydration flash)
+  if (!authReady) {
+    return (
+      <main className="min-h-screen bg-brand-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-slate-700 border-t-brand-cyan rounded-full animate-spin" />
+      </main>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!isAuthenticated && !manualAuth) {
+    return <AdminLoginPage onLoginSuccess={() => setManualAuth(true)} />;
+  }
 
   return (
     <main className="min-h-screen bg-brand-dark text-slate-100 flex flex-col justify-between">
@@ -65,6 +91,14 @@ export default function AdminDashboardPage() {
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-brand-cyan" : ""}`} />
               <span>Actualiser</span>
+            </button>
+
+            <button
+              onClick={() => { logout(); setManualAuth(false); }}
+              className="px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-400 hover:bg-red-500/20 flex items-center gap-2 transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Déconnexion</span>
             </button>
           </div>
         </div>
