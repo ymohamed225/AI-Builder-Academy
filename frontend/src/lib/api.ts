@@ -114,6 +114,7 @@ export async function sendCampaign(payload: {
   status_filter?: string;
   training_filter?: string;
   candidate_ids?: number[];
+  custom_recipients?: string;
   subject?: string;
   body_template: string;
   attachment_url?: string;

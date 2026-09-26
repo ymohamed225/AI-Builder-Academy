@@ -15,21 +15,48 @@ async function sendCampaign(req, res) {
     const recipientType = input.recipient_type || 'ALL';
     const statusFilter = input.status_filter || '';
     const trainingFilter = input.training_filter || '';
+    const customRecipients = input.custom_recipients || '';
+    const candidateIds = Array.isArray(input.candidate_ids) ? input.candidate_ids : [];
 
-    let whereClause = [];
-    let params = [];
+    let candRows = [];
 
-    if (recipientType === 'STATUS' && statusFilter) {
-      whereClause.push('status = ?');
-      params.push(statusFilter);
+    if (recipientType === 'CUSTOM' && customRecipients) {
+      // Manual email/phone entry separated by commas, semicolons or newlines
+      const rawEntries = typeof customRecipients === 'string'
+        ? customRecipients.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean)
+        : customRecipients;
+
+      candRows = rawEntries.map((entry, idx) => {
+        const isEmail = entry.includes('@');
+        return {
+          id: `custom_${idx + 1}`,
+          first_name: isEmail ? entry.split('@')[0] : 'Destinataire',
+          last_name: '',
+          email: isEmail ? entry : '',
+          phone: !isEmail ? entry : '',
+          registration_reference: 'MANUEL',
+          desired_training: 'Direct'
+        };
+      });
+    } else if (recipientType === 'CUSTOM' && candidateIds.length > 0) {
+      const placeholders = candidateIds.map(() => '?').join(',');
+      candRows = await db.query(`SELECT * FROM pre_registrations WHERE id IN (${placeholders})`, candidateIds);
+    } else {
+      let whereClause = [];
+      let params = [];
+
+      if (recipientType === 'STATUS' && statusFilter) {
+        whereClause.push('status = ?');
+        params.push(statusFilter);
+      }
+      if (recipientType === 'TRAINING' && trainingFilter) {
+        whereClause.push('desired_training = ?');
+        params.push(trainingFilter);
+      }
+
+      const whereStr = whereClause.length > 0 ? `WHERE ${whereClause.join(' AND ')}` : '';
+      candRows = await db.query(`SELECT * FROM pre_registrations ${whereStr}`, params);
     }
-    if (recipientType === 'TRAINING' && trainingFilter) {
-      whereClause.push('desired_training = ?');
-      params.push(trainingFilter);
-    }
-
-    const whereStr = whereClause.length > 0 ? `WHERE ${whereClause.join(' AND ')}` : '';
-    const candRows = await db.query(`SELECT * FROM pre_registrations ${whereStr}`, params);
 
     const processedRecipients = candRows.map(c => {
       const firstName = c.first_name || 'Candidat';
